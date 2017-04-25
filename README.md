@@ -1,4 +1,7 @@
-# api documentation for  flow (v0.2.3)  [![npm package](https://img.shields.io/npm/v/npmdoc-flow.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-flow) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-flow.svg)](https://travis-ci.org/npmdoc/node-npmdoc-flow)
+# npmdoc-flow
+
+#### basic api documentation for  flow (v0.2.3)  [![npm package](https://img.shields.io/npm/v/npmdoc-flow.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-flow) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-flow.svg)](https://travis-ci.org/npmdoc/node-npmdoc-flow)
+
 #### Flow-JS makes it easy to express multi-step asynchronous logic in Node or the browser
 
 [![NPM](https://nodei.co/npm/flow.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/flow)
@@ -48,7 +51,8 @@
     "optionalDependencies": {},
     "readmeFilename": "README.md",
     "url": "http://github.com/willconant/flow-js",
-    "version": "0.2.3"
+    "version": "0.2.3",
+    "bin": {}
 }
 ```
 

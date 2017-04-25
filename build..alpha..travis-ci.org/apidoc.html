@@ -97,55 +97,7 @@
 
         <li>
 
-            <a class="apidocElementLiA" href="#apidoc.element.flow.serialForEach.exec">
-            function <span class="apidocSignatureSpan">flow.</span>serialForEach.exec
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-        <li>
-
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">flow.</span>serialForEach.blocks</span>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.flow.anyError">module flow.anyError</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.flow.anyError.anyError">
-            function <span class="apidocSignatureSpan">flow.</span>anyError
-            <span class="apidocSignatureSpan">(results)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.flow.define">module flow.define</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.flow.define.define">
-            function <span class="apidocSignatureSpan">flow.</span>define
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.flow.exec">module flow.exec</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.flow.exec.exec">
-            function <span class="apidocSignatureSpan">flow.</span>exec
-            <span class="apidocSignatureSpan">()</span>
-            </a>
 
         </li>
 
@@ -203,19 +155,6 @@
 
             <a class="apidocElementLiA" href="#apidoc.element.flow.serialForEach.blocks.2">
             function <span class="apidocSignatureSpan">flow.serialForEach.blocks.</span>2
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.flow.serialForEach.exec">module flow.serialForEach.exec</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.flow.serialForEach.exec.exec">
-            function <span class="apidocSignatureSpan">flow.serialForEach.</span>exec
             <span class="apidocSignatureSpan">()</span>
             </a>
 
@@ -345,20 +284,19 @@
 		return thisFlow;
 	}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-Each function in the flow is called with a special `this` object which maintains the
-state of the flow&#x27;s execution, acts as a container for saving values for use between
-functions in the flow, and acts as a callback to the next function in the flow.
-
-Here is an example to make this clear:
-
-	// define a flow for renaming a file and then printing its stats
-	var renameAndStat = flow.<span class="apidocCodeKeywordSpan">define</span>(
-	
-		function(fromName, toName) {
-			// arguments passed to renameAndStat() will pass through to this first function
-			
-			this.toName = toName; // save to be used in the next function
-			fs.rename(fromName, toName, this);
+    {
+      &#x22;name&#x22;: &#x22;willconant&#x22;,
+      &#x22;email&#x22;: &#x22;will.conant@gmail.com&#x22;
+    }
+  ],
+  &#x22;name&#x22;: &#x22;flow&#x22;,
+  &#x22;optionalDependencies&#x22;: {},
+  &#x22;readme&#x22;: &#x22;Flow-JS\n===============\n\nOverview\n---------------\n\nFlow-JS provides a continuation-esque construct
+ that makes it much easier to express\nmulti-step asynchronous logic in non-blocking callback-heavy environments like\nNode.js or javascript in the web browser.\n\nThe concept is best explained with an example. The following code uses a simple\nasynchronous key-store to look-up a user&#x27;s ID from his username and then sets his\nemail address, first name, and last name.\n\nIn this example, the dbGet and dbSet functions are assumed to rely on asynchronous\nI/O and both take a callback that is called upon completion.\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, function() {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, function() {\n\t\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, function() {\n\t\t\t\t\tokWeAreDone();\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\t});\n\nNotice how every single step requires another nested function definition. A\nfour-step process like the one shown here is fairly awkward. Imagine how painful a\n10-step process would be!\n\nOne might point out that there is no reason to wait for one dbSet to complete before\ncalling the next, but, assuming we don&#x27;t want okWeAreDone to be called until all\nthree calls to dbSet are finished, we&#x27;d need some logic to manage that:\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tvar completeCount = 0;\n\t\tvar complete = function() {\n\t\t\tcompleteCount += 1;\n\t\t\tif (completeCount == 3) {\n\t\t\t\tokWeAreDone();\n\t\t\t}\n\t\t}\n\t\t\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);\n\t});\n\nNow look at the same example using Flow-JS:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\nA flow consists of a series of functions, each of which is applied with a special\n`this` object which serves as a callback to the next function in the series. In\ncases like our second step, `this.MULTI()` can be used to generate a callback that\nwon&#x27;t call the next function until all such callbacks have been called.\n\n\nInstalling\n---------------\n\nFlow-JS is a CommonJS compatible module. Place the \&#x22;flow.js\&#x22; file in any directory\nlisted in your `require.paths` array and require it like this:\n\n\tvar flow = require(&#x27;flow&#x27;)\n\nOr you can just put \&#x22;flow.js\&#x22; next to your script and do this:\n\n\tvar flow = require(&#x27;./flow&#x27;)\n\n\nDefining a Flow\n---------------\n\n`flow.define` defines a flow given any number of functions as parameters. It returns\na function that can be used to execute that flow more than once. Whatever parameters\nare passed each time that flow is called are passed as the parameters to the first\nfunction in the flow.\n\nEach function in the flow is called with a special `this` object which maintains the\nstate of the flow&#x27;s execution, acts as a container for saving values for use between\nfunctions in the flow, and acts as a callback to the next function in the flow.\n\nHere is an example to make this clear:\n\n\t// define a flow for renaming a file and then printing its stats\n\tvar renameAndStat = flow.<span class="apidocCodeKeywordSpan">define</span>(\n\t\n\t\tfunction(fromName, toName) {\n\t\t\t// arguments passed to renameAndStat() will pass through to this first function\n\t\t\t\n\t\t\tthis.toName = toName; // save to be used in the next function\n\t\t\tfs.rename(fromName, toName, this);\n\t\t\n\t\t},function(err) {\n\t\t\t// when fs.rename calls the special \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.rename chooses to pass to the callback will pass through to this function\n\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\t// the \&#x22;this\&#x22; here is the same as in the function above, so this.toName is available\n\t\t\tfs.stat(this.toName, this);\n\t\t\n\t\t},function(err, stats) {\n\t\t\t// when fs.stat calls the \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.stat chooses to pass to the callback will pass through to this function\n\t\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\t\n\t// now renameAndStat can be used more than once\n\trenameAndStat(\&#x22;/tmp/hello1\&#x22;, \&#x22;/tmp/world1\&#x22;);\n\trenameAndStat(\&#x22;/tmp/hello2\&#x22;, \&#x22;/tmp/world2\&#x22;);\n\n\nExecuting a Flow Just Once\n---------------\n\n`flow.exec` is a convenience function that defines a flow and executes it immediately,\npassing no arguments to the first function.\n\nHere&#x27;s a simple example very similar to the one above:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/hello\&#x22;, \&#x22;/tmp/world\&#x22;, this);\n\t\t},function(err) {\n\t\t\tif (err) throw err;\n\t\t\tfs.stat(\&#x22;/tmp/world\&#x22;, this)\n\t\t},function(err, stats) {\n\t\t\tif (err) throw err;\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\n\nMultiplexing\n---------------\n\nSometimes, it makes sense for a step in a flow to initiate several asynchronous tasks and\nthen wait for all of those tasks to finish before continuing to the next step in the flow.\nThis can be accomplished by passing `this.MULTI()` as the callback rather than just `this`.\n\nHere is an example of `this.MULTI()` in action (repeated from the overview):\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\n  You can identify the results of a function by passing a result identifier to MULTI. The results of a function can retrieved using this key in the final step. The result will be a single value if callback receives 0 or 1 argument, otherwise it will be an array of arguments passed to the callback.\n\n  Example:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this.MULTI(&#x27;bob&#x27;));\n\t\t\tdbGet(&#x27;userIdOf:joohndoe&#x27;, this.MULTI(&#x27;john&#x27;));\n\t\t},function(results) {\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;bob&#x27;] + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;);\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;john&#x27;] + &#x27;:email&#x27;, &#x27;joohndoe@potato.egg&#x27;);\n\t\t  okWeAreDone();\n\t\t}\n\t);\n\nIn many cases, you may simply discard the arguments passed to each of the callbacks generated\nby `this.MULTI()`, but if you need them, they are accessible as an array of `arguments`\nobjects passed as the first argument of the next function. Each `arguments` object will be\nappended to the array as it is received, so the order will be unpredictable for most\nasynchronous APIs.\n\nHere&#x27;s a quick example that checks for errors:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/a\&#x22;, \&#x22;/tmp/1\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/b\&#x22;, \&#x22;/tmp/2\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/c\&#x22;, \&#x22;/tmp/3\&#x22;, this.MULTI());\n\t\t\n\t\t},function(argsArray) {\n\t\t\targsArray.forEach(function(args){\n\t\t\t\tif (args[0]) then throw args[0];\n\t\t\t});\n\t\t}\n\t);\n\n\nserialForEach\n---------------\n\nFlow-JS comes with a convience function called `flow.serialForEach` which can be used to\napply an asynchronous function to each element in an array of values serially:\n\n\tflow.serialForEach([1, 2, 3, 4], function(val) {\n\t\tkeystore.increment(\&#x22;counter\&#x22;, val, this);\n\t},function(error, newVal) {\n\t\tif (error) throw error;\n\t\tsys.puts(&#x27;newVal: &#x27; + newVal);\n\t},function() {\n\t\tsys.puts(&#x27;This is the end!&#x27;);\n\t});\n\n`flow.serialForEach` takes an array-like object, a function to be called for each item\nin the array, a function that receives the callback values after each iteration, and a\nfunction that is called after the entire process is finished. Both of the second two\nfunctions are optional.\n\n`flow.serialForEach` is actually implemented with `flow.define`.\n\nThanks to John Wright for suggesting the idea! (http://github.com/mrjjwright)\n&#x22;,
+  &#x22;readmeFilename&#x22;: &#x22;README.md&#x22;,
+  &#x22;url&#x22;: &#x22;http://github.com/willconant/flow-js&#x22;,
+  &#x22;version&#x22;: &#x22;0.2.3&#x22;
+}
 ...</pre></li>
     </ul>
 
@@ -376,21 +314,19 @@ Here is an example to make this clear:
 		applyArgs(flow.define, flow, arguments)();
 	}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);
-	});
-
-Now look at the same example using Flow-JS:
-
-	flow.<span class="apidocCodeKeywordSpan">exec</span>(
-		function() {
-			dbGet(&#x27;userIdOf:bobvance&#x27;, this);
-			
-		},function(userId) {
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());
+    {
+      &#x22;name&#x22;: &#x22;willconant&#x22;,
+      &#x22;email&#x22;: &#x22;will.conant@gmail.com&#x22;
+    }
+  ],
+  &#x22;name&#x22;: &#x22;flow&#x22;,
+  &#x22;optionalDependencies&#x22;: {},
+  &#x22;readme&#x22;: &#x22;Flow-JS\n===============\n\nOverview\n---------------\n\nFlow-JS provides a continuation-esque construct
+ that makes it much easier to express\nmulti-step asynchronous logic in non-blocking callback-heavy environments like\nNode.js or javascript in the web browser.\n\nThe concept is best explained with an example. The following code uses a simple\nasynchronous key-store to look-up a user&#x27;s ID from his username and then sets his\nemail address, first name, and last name.\n\nIn this example, the dbGet and dbSet functions are assumed to rely on asynchronous\nI/O and both take a callback that is called upon completion.\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, function() {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, function() {\n\t\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, function() {\n\t\t\t\t\tokWeAreDone();\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\t});\n\nNotice how every single step requires another nested function definition. A\nfour-step process like the one shown here is fairly awkward. Imagine how painful a\n10-step process would be!\n\nOne might point out that there is no reason to wait for one dbSet to complete before\ncalling the next, but, assuming we don&#x27;t want okWeAreDone to be called until all\nthree calls to dbSet are finished, we&#x27;d need some logic to manage that:\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tvar completeCount = 0;\n\t\tvar complete = function() {\n\t\t\tcompleteCount += 1;\n\t\t\tif (completeCount == 3) {\n\t\t\t\tokWeAreDone();\n\t\t\t}\n\t\t}\n\t\t\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);\n\t});\n\nNow look at the same example using Flow-JS:\n\n\tflow.<span class="apidocCodeKeywordSpan">exec</span>(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\nA flow consists of a series of functions, each of which is applied with a special\n`this` object which serves as a callback to the next function in the series. In\ncases like our second step, `this.MULTI()` can be used to generate a callback that\nwon&#x27;t call the next function until all such callbacks have been called.\n\n\nInstalling\n---------------\n\nFlow-JS is a CommonJS compatible module. Place the \&#x22;flow.js\&#x22; file in any directory\nlisted in your `require.paths` array and require it like this:\n\n\tvar flow = require(&#x27;flow&#x27;)\n\nOr you can just put \&#x22;flow.js\&#x22; next to your script and do this:\n\n\tvar flow = require(&#x27;./flow&#x27;)\n\n\nDefining a Flow\n---------------\n\n`flow.define` defines a flow given any number of functions as parameters. It returns\na function that can be used to execute that flow more than once. Whatever parameters\nare passed each time that flow is called are passed as the parameters to the first\nfunction in the flow.\n\nEach function in the flow is called with a special `this` object which maintains the\nstate of the flow&#x27;s execution, acts as a container for saving values for use between\nfunctions in the flow, and acts as a callback to the next function in the flow.\n\nHere is an example to make this clear:\n\n\t// define a flow for renaming a file and then printing its stats\n\tvar renameAndStat = flow.define(\n\t\n\t\tfunction(fromName, toName) {\n\t\t\t// arguments passed to renameAndStat() will pass through to this first function\n\t\t\t\n\t\t\tthis.toName = toName; // save to be used in the next function\n\t\t\tfs.rename(fromName, toName, this);\n\t\t\n\t\t},function(err) {\n\t\t\t// when fs.rename calls the special \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.rename chooses to pass to the callback will pass through to this function\n\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\t// the \&#x22;this\&#x22; here is the same as in the function above, so this.toName is available\n\t\t\tfs.stat(this.toName, this);\n\t\t\n\t\t},function(err, stats) {\n\t\t\t// when fs.stat calls the \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.stat chooses to pass to the callback will pass through to this function\n\t\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\t\n\t// now renameAndStat can be used more than once\n\trenameAndStat(\&#x22;/tmp/hello1\&#x22;, \&#x22;/tmp/world1\&#x22;);\n\trenameAndStat(\&#x22;/tmp/hello2\&#x22;, \&#x22;/tmp/world2\&#x22;);\n\n\nExecuting a Flow Just Once\n---------------\n\n`flow.exec` is a convenience function that defines a flow and executes it immediately,\npassing no arguments to the first function.\n\nHere&#x27;s a simple example very similar to the one above:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/hello\&#x22;, \&#x22;/tmp/world\&#x22;, this);\n\t\t},function(err) {\n\t\t\tif (err) throw err;\n\t\t\tfs.stat(\&#x22;/tmp/world\&#x22;, this)\n\t\t},function(err, stats) {\n\t\t\tif (err) throw err;\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\n\nMultiplexing\n---------------\n\nSometimes, it makes sense for a step in a flow to initiate several asynchronous tasks and\nthen wait for all of those tasks to finish before continuing to the next step in the flow.\nThis can be accomplished by passing `this.MULTI()` as the callback rather than just `this`.\n\nHere is an example of `this.MULTI()` in action (repeated from the overview):\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\n  You can identify the results of a function by passing a result identifier to MULTI. The results of a function can retrieved using this key in the final step. The result will be a single value if callback receives 0 or 1 argument, otherwise it will be an array of arguments passed to the callback.\n\n  Example:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this.MULTI(&#x27;bob&#x27;));\n\t\t\tdbGet(&#x27;userIdOf:joohndoe&#x27;, this.MULTI(&#x27;john&#x27;));\n\t\t},function(results) {\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;bob&#x27;] + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;);\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;john&#x27;] + &#x27;:email&#x27;, &#x27;joohndoe@potato.egg&#x27;);\n\t\t  okWeAreDone();\n\t\t}\n\t);\n\nIn many cases, you may simply discard the arguments passed to each of the callbacks generated\nby `this.MULTI()`, but if you need them, they are accessible as an array of `arguments`\nobjects passed as the first argument of the next function. Each `arguments` object will be\nappended to the array as it is received, so the order will be unpredictable for most\nasynchronous APIs.\n\nHere&#x27;s a quick example that checks for errors:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/a\&#x22;, \&#x22;/tmp/1\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/b\&#x22;, \&#x22;/tmp/2\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/c\&#x22;, \&#x22;/tmp/3\&#x22;, this.MULTI());\n\t\t\n\t\t},function(argsArray) {\n\t\t\targsArray.forEach(function(args){\n\t\t\t\tif (args[0]) then throw args[0];\n\t\t\t});\n\t\t}\n\t);\n\n\nserialForEach\n---------------\n\nFlow-JS comes with a convience function called `flow.serialForEach` which can be used to\napply an asynchronous function to each element in an array of values serially:\n\n\tflow.serialForEach([1, 2, 3, 4], function(val) {\n\t\tkeystore.increment(\&#x22;counter\&#x22;, val, this);\n\t},function(error, newVal) {\n\t\tif (error) throw error;\n\t\tsys.puts(&#x27;newVal: &#x27; + newVal);\n\t},function() {\n\t\tsys.puts(&#x27;This is the end!&#x27;);\n\t});\n\n`flow.serialForEach` takes an array-like object, a function to be called for each item\nin the array, a function that receives the callback values after each iteration, and a\nfunction that is called after the entire process is finished. Both of the second two\nfunctions are optional.\n\n`flow.serialForEach` is actually implemented with `flow.define`.\n\nThanks to John Wright for suggesting the idea! (http://github.com/mrjjwright)\n&#x22;,
+  &#x22;readmeFilename&#x22;: &#x22;README.md&#x22;,
+  &#x22;url&#x22;: &#x22;http://github.com/willconant/flow-js&#x22;,
+  &#x22;version&#x22;: &#x22;0.2.3&#x22;
+}
 ...</pre></li>
     </ul>
 
@@ -407,295 +343,23 @@ Now look at the same example using Flow-JS:
 			applyArgs(thisFlow.exec, thisFlow, arguments);
 		}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-
-serialForEach
----------------
-
-Flow-JS comes with a convience function called `flow.serialForEach` which can be used to
-apply an asynchronous function to each element in an array of values serially:
-
-	flow.<span class="apidocCodeKeywordSpan">serialForEach</span>([1, 2, 3, 4], function(val) {
-		keystore.increment(&#x22;counter&#x22;, val, this);
-	},function(error, newVal) {
-		if (error) throw error;
-		sys.puts(&#x27;newVal: &#x27; + newVal);
-	},function() {
-		sys.puts(&#x27;This is the end!&#x27;);
-	});
+    {
+      &#x22;name&#x22;: &#x22;willconant&#x22;,
+      &#x22;email&#x22;: &#x22;will.conant@gmail.com&#x22;
+    }
+  ],
+  &#x22;name&#x22;: &#x22;flow&#x22;,
+  &#x22;optionalDependencies&#x22;: {},
+  &#x22;readme&#x22;: &#x22;Flow-JS\n===============\n\nOverview\n---------------\n\nFlow-JS provides a continuation-esque construct
+ that makes it much easier to express\nmulti-step asynchronous logic in non-blocking callback-heavy environments like\nNode.js or javascript in the web browser.\n\nThe concept is best explained with an example. The following code uses a simple\nasynchronous key-store to look-up a user&#x27;s ID from his username and then sets his\nemail address, first name, and last name.\n\nIn this example, the dbGet and dbSet functions are assumed to rely on asynchronous\nI/O and both take a callback that is called upon completion.\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, function() {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, function() {\n\t\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, function() {\n\t\t\t\t\tokWeAreDone();\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\t});\n\nNotice how every single step requires another nested function definition. A\nfour-step process like the one shown here is fairly awkward. Imagine how painful a\n10-step process would be!\n\nOne might point out that there is no reason to wait for one dbSet to complete before\ncalling the next, but, assuming we don&#x27;t want okWeAreDone to be called until all\nthree calls to dbSet are finished, we&#x27;d need some logic to manage that:\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tvar completeCount = 0;\n\t\tvar complete = function() {\n\t\t\tcompleteCount += 1;\n\t\t\tif (completeCount == 3) {\n\t\t\t\tokWeAreDone();\n\t\t\t}\n\t\t}\n\t\t\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);\n\t});\n\nNow look at the same example using Flow-JS:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\nA flow consists of a series of functions, each of which is applied with a special\n`this` object which serves as a callback to the next function in the series. In\ncases like our second step, `this.MULTI()` can be used to generate a callback that\nwon&#x27;t call the next function until all such callbacks have been called.\n\n\nInstalling\n---------------\n\nFlow-JS is a CommonJS compatible module. Place the \&#x22;flow.js\&#x22; file in any directory\nlisted in your `require.paths` array and require it like this:\n\n\tvar flow = require(&#x27;flow&#x27;)\n\nOr you can just put \&#x22;flow.js\&#x22; next to your script and do this:\n\n\tvar flow = require(&#x27;./flow&#x27;)\n\n\nDefining a Flow\n---------------\n\n`flow.define` defines a flow given any number of functions as parameters. It returns\na function that can be used to execute that flow more than once. Whatever parameters\nare passed each time that flow is called are passed as the parameters to the first\nfunction in the flow.\n\nEach function in the flow is called with a special `this` object which maintains the\nstate of the flow&#x27;s execution, acts as a container for saving values for use between\nfunctions in the flow, and acts as a callback to the next function in the flow.\n\nHere is an example to make this clear:\n\n\t// define a flow for renaming a file and then printing its stats\n\tvar renameAndStat = flow.define(\n\t\n\t\tfunction(fromName, toName) {\n\t\t\t// arguments passed to renameAndStat() will pass through to this first function\n\t\t\t\n\t\t\tthis.toName = toName; // save to be used in the next function\n\t\t\tfs.rename(fromName, toName, this);\n\t\t\n\t\t},function(err) {\n\t\t\t// when fs.rename calls the special \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.rename chooses to pass to the callback will pass through to this function\n\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\t// the \&#x22;this\&#x22; here is the same as in the function above, so this.toName is available\n\t\t\tfs.stat(this.toName, this);\n\t\t\n\t\t},function(err, stats) {\n\t\t\t// when fs.stat calls the \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.stat chooses to pass to the callback will pass through to this function\n\t\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\t\n\t// now renameAndStat can be used more than once\n\trenameAndStat(\&#x22;/tmp/hello1\&#x22;, \&#x22;/tmp/world1\&#x22;);\n\trenameAndStat(\&#x22;/tmp/hello2\&#x22;, \&#x22;/tmp/world2\&#x22;);\n\n\nExecuting a Flow Just Once\n---------------\n\n`flow.exec` is a convenience function that defines a flow and executes it immediately,\npassing no arguments to the first function.\n\nHere&#x27;s a simple example very similar to the one above:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/hello\&#x22;, \&#x22;/tmp/world\&#x22;, this);\n\t\t},function(err) {\n\t\t\tif (err) throw err;\n\t\t\tfs.stat(\&#x22;/tmp/world\&#x22;, this)\n\t\t},function(err, stats) {\n\t\t\tif (err) throw err;\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\n\nMultiplexing\n---------------\n\nSometimes, it makes sense for a step in a flow to initiate several asynchronous tasks and\nthen wait for all of those tasks to finish before continuing to the next step in the flow.\nThis can be accomplished by passing `this.MULTI()` as the callback rather than just `this`.\n\nHere is an example of `this.MULTI()` in action (repeated from the overview):\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\n  You can identify the results of a function by passing a result identifier to MULTI. The results of a function can retrieved using this key in the final step. The result will be a single value if callback receives 0 or 1 argument, otherwise it will be an array of arguments passed to the callback.\n\n  Example:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this.MULTI(&#x27;bob&#x27;));\n\t\t\tdbGet(&#x27;userIdOf:joohndoe&#x27;, this.MULTI(&#x27;john&#x27;));\n\t\t},function(results) {\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;bob&#x27;] + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;);\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;john&#x27;] + &#x27;:email&#x27;, &#x27;joohndoe@potato.egg&#x27;);\n\t\t  okWeAreDone();\n\t\t}\n\t);\n\nIn many cases, you may simply discard the arguments passed to each of the callbacks generated\nby `this.MULTI()`, but if you need them, they are accessible as an array of `arguments`\nobjects passed as the first argument of the next function. Each `arguments` object will be\nappended to the array as it is received, so the order will be unpredictable for most\nasynchronous APIs.\n\nHere&#x27;s a quick example that checks for errors:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/a\&#x22;, \&#x22;/tmp/1\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/b\&#x22;, \&#x22;/tmp/2\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/c\&#x22;, \&#x22;/tmp/3\&#x22;, this.MULTI());\n\t\t\n\t\t},function(argsArray) {\n\t\t\targsArray.forEach(function(args){\n\t\t\t\tif (args[0]) then throw args[0];\n\t\t\t});\n\t\t}\n\t);\n\n\nserialForEach\n---------------\n\nFlow-JS comes with a convience function called `flow.serialForEach` which can be used to\napply an asynchronous function to each element in an array of values serially:\n\n\tflow.<span class="apidocCodeKeywordSpan">serialForEach</span>([1, 2, 3, 4], function(val) {\n\t\tkeystore.increment(\&#x22;counter\&#x22;, val, this);\n\t},function(error, newVal) {\n\t\tif (error) throw error;\n\t\tsys.puts(&#x27;newVal: &#x27; + newVal);\n\t},function() {\n\t\tsys.puts(&#x27;This is the end!&#x27;);\n\t});\n\n`flow.serialForEach` takes an array-like object, a function to be called for each item\nin the array, a function that receives the callback values after each iteration, and a\nfunction that is called after the entire process is finished. Both of the second two\nfunctions are optional.\n\n`flow.serialForEach` is actually implemented with `flow.define`.\n\nThanks to John Wright for suggesting the idea! (http://github.com/mrjjwright)\n&#x22;,
+  &#x22;readmeFilename&#x22;: &#x22;README.md&#x22;,
+  &#x22;url&#x22;: &#x22;http://github.com/willconant/flow-js&#x22;,
+  &#x22;version&#x22;: &#x22;0.2.3&#x22;
+}
 ...</pre></li>
     </ul>
 
 
-
-    <h2>
-        <a href="#apidoc.element.flow.serialForEach.exec" id="apidoc.element.flow.serialForEach.exec">
-        function <span class="apidocSignatureSpan">flow.</span>serialForEach.exec
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">serialForEach.exec = function () {
-			// The flowState is the actual object each step in the flow is applied to. It acts as a
-			// callback to the next function. It also maintains the internal state of each execution
-			// and acts as a place for users to save values between steps of the flow.
-			var flowState = function() {
-				if (flowState.__frozen) return;
-				
-				if (flowState.__timeoutId) {
-					clearTimeout(flowState.__timeoutId);
-					delete flowState.__timeoutId;
-				}
-				
-				var blockIdx = flowState.__nextBlockIdx ++;
-				var block = thisFlow.blocks[blockIdx];
-				
-				if (block === undefined) {
-					return;
-				}
-				else {
-					applyArgs(block, flowState, arguments);
-				}
-			}
-			
-			// __nextBlockIdx specifies which function is the next step in the flow.
-			flowState.__nextBlockIdx = 0;
-			
-			// __multiCount is incremented every time MULTI is used to createa a multiplexed callback
-			flowState.__multiCount = 0;
-			
-			// __multiOutputs accumulates the arguments of each call to callbacks generated by MULTI
-			flowState.__multiOutputs = [];
-			
-			// REWIND signals that the next call to thisFlow should repeat this step. It allows you
-			// to create serial loops.
-			flowState.REWIND = function() {
-				flowState.__nextBlockIdx -= 1;
-			}
-			
-			// MULTI can be used to generate callbacks that must ALL be called before the next step
-			// in the flow is executed. Arguments to those callbacks are accumulated, and an array of
-			// of those arguments objects is sent as the one argument to the next step in the flow.
-			// @param {String} resultId An identifier to get the result of a multi call.
-			flowState.MULTI = function(resultId) {
-				flowState.__multiCount += 1;
-				return function() {
-					flowState.__multiCount -= 1;
-					flowState.__multiOutputs.push(arguments);
-
-          if (resultId) {
-            var result = arguments.length &#x3c;= 1 ? arguments[0] : arguments
-            flowState.__multiOutputs[resultId] = result;
-          }
-					
-					if (flowState.__multiCount === 0) {
-						var multiOutputs = flowState.__multiOutputs;
-						flowState.__multiOutputs = [];
-						flowState(multiOutputs);
-					}
-				}
-			}
-						
-			// TIMEOUT sets a timeout that freezes a flow and calls the provided callback. This
-			// timeout is cleared if the next flow step happens first.
-			flowState.TIMEOUT = function(milliseconds, timeoutCallback) {
-				if (flowState.__timeoutId !== undefined) {
-					throw new Error(&#x22;timeout already set for this flow step&#x22;);
-				}
-				
-				flowState.__timeoutId = setTimeout(function() {
-					flowState.__frozen = true;
-					timeoutCallback();
-				}, milliseconds);
-			}
-			
-			applyArgs(flowState, this, arguments);
-		}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.flow.anyError" id="apidoc.module.flow.anyError">module flow.anyError</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.flow.anyError.anyError" id="apidoc.element.flow.anyError.anyError">
-        function <span class="apidocSignatureSpan">flow.</span>anyError
-        <span class="apidocSignatureSpan">(results)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function anyError(results) {
-		var r, _i, _len;
-		for (_i = 0, _len = results.length; _i &#x3c; _len; _i++) {
-			r = results[_i];
-			if (r[0]) {
-				return r[0];
-			}
-		}
-		return null;
-	}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.flow.define" id="apidoc.module.flow.define">module flow.define</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.flow.define.define" id="apidoc.element.flow.define.define">
-        function <span class="apidocSignatureSpan">flow.</span>define
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function define() {	
-		var thisFlow = function() {
-			applyArgs(thisFlow.exec, thisFlow, arguments);
-		}
-		
-		thisFlow.blocks = arguments;
-		
-		thisFlow.exec = function() {
-			// The flowState is the actual object each step in the flow is applied to. It acts as a
-			// callback to the next function. It also maintains the internal state of each execution
-			// and acts as a place for users to save values between steps of the flow.
-			var flowState = function() {
-				if (flowState.__frozen) return;
-				
-				if (flowState.__timeoutId) {
-					clearTimeout(flowState.__timeoutId);
-					delete flowState.__timeoutId;
-				}
-				
-				var blockIdx = flowState.__nextBlockIdx ++;
-				var block = thisFlow.blocks[blockIdx];
-				
-				if (block === undefined) {
-					return;
-				}
-				else {
-					applyArgs(block, flowState, arguments);
-				}
-			}
-			
-			// __nextBlockIdx specifies which function is the next step in the flow.
-			flowState.__nextBlockIdx = 0;
-			
-			// __multiCount is incremented every time MULTI is used to createa a multiplexed callback
-			flowState.__multiCount = 0;
-			
-			// __multiOutputs accumulates the arguments of each call to callbacks generated by MULTI
-			flowState.__multiOutputs = [];
-			
-			// REWIND signals that the next call to thisFlow should repeat this step. It allows you
-			// to create serial loops.
-			flowState.REWIND = function() {
-				flowState.__nextBlockIdx -= 1;
-			}
-			
-			// MULTI can be used to generate callbacks that must ALL be called before the next step
-			// in the flow is executed. Arguments to those callbacks are accumulated, and an array of
-			// of those arguments objects is sent as the one argument to the next step in the flow.
-			// @param {String} resultId An identifier to get the result of a multi call.
-			flowState.MULTI = function(resultId) {
-				flowState.__multiCount += 1;
-				return function() {
-					flowState.__multiCount -= 1;
-					flowState.__multiOutputs.push(arguments);
-
-          if (resultId) {
-            var result = arguments.length &#x3c;= 1 ? arguments[0] : arguments
-            flowState.__multiOutputs[resultId] = result;
-          }
-					
-					if (flowState.__multiCount === 0) {
-						var multiOutputs = flowState.__multiOutputs;
-						flowState.__multiOutputs = [];
-						flowState(multiOutputs);
-					}
-				}
-			}
-						
-			// TIMEOUT sets a timeout that freezes a flow and calls the provided callback. This
-			// timeout is cleared if the next flow step happens first.
-			flowState.TIMEOUT = function(milliseconds, timeoutCallback) {
-				if (flowState.__timeoutId !== undefined) {
-					throw new Error(&#x22;timeout already set for this flow step&#x22;);
-				}
-				
-				flowState.__timeoutId = setTimeout(function() {
-					flowState.__frozen = true;
-					timeoutCallback();
-				}, milliseconds);
-			}
-			
-			applyArgs(flowState, this, arguments);
-		}
-		
-		return thisFlow;
-	}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-Each function in the flow is called with a special `this` object which maintains the
-state of the flow&#x27;s execution, acts as a container for saving values for use between
-functions in the flow, and acts as a callback to the next function in the flow.
-
-Here is an example to make this clear:
-
-	// define a flow for renaming a file and then printing its stats
-	var renameAndStat = flow.<span class="apidocCodeKeywordSpan">define</span>(
-	
-		function(fromName, toName) {
-			// arguments passed to renameAndStat() will pass through to this first function
-			
-			this.toName = toName; // save to be used in the next function
-			fs.rename(fromName, toName, this);
-...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.flow.exec" id="apidoc.module.flow.exec">module flow.exec</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.flow.exec.exec" id="apidoc.element.flow.exec.exec">
-        function <span class="apidocSignatureSpan">flow.</span>exec
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function exec() {
-		var flow = typeof exports != &#x27;undefined&#x27; ? exports : window.flow;
-		applyArgs(flow.define, flow, arguments)();
-	}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);
-	});
-
-Now look at the same example using Flow-JS:
-
-	flow.<span class="apidocCodeKeywordSpan">exec</span>(
-		function() {
-			dbGet(&#x27;userIdOf:bobvance&#x27;, this);
-			
-		},function(userId) {
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());
-...</pre></li>
-    </ul>
 
 
 </div>
@@ -715,21 +379,19 @@ Now look at the same example using Flow-JS:
 			applyArgs(thisFlow.exec, thisFlow, arguments);
 		}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-
-serialForEach
----------------
-
-Flow-JS comes with a convience function called `flow.serialForEach` which can be used to
-apply an asynchronous function to each element in an array of values serially:
-
-	flow.<span class="apidocCodeKeywordSpan">serialForEach</span>([1, 2, 3, 4], function(val) {
-		keystore.increment(&#x22;counter&#x22;, val, this);
-	},function(error, newVal) {
-		if (error) throw error;
-		sys.puts(&#x27;newVal: &#x27; + newVal);
-	},function() {
-		sys.puts(&#x27;This is the end!&#x27;);
-	});
+    {
+      &#x22;name&#x22;: &#x22;willconant&#x22;,
+      &#x22;email&#x22;: &#x22;will.conant@gmail.com&#x22;
+    }
+  ],
+  &#x22;name&#x22;: &#x22;flow&#x22;,
+  &#x22;optionalDependencies&#x22;: {},
+  &#x22;readme&#x22;: &#x22;Flow-JS\n===============\n\nOverview\n---------------\n\nFlow-JS provides a continuation-esque construct
+ that makes it much easier to express\nmulti-step asynchronous logic in non-blocking callback-heavy environments like\nNode.js or javascript in the web browser.\n\nThe concept is best explained with an example. The following code uses a simple\nasynchronous key-store to look-up a user&#x27;s ID from his username and then sets his\nemail address, first name, and last name.\n\nIn this example, the dbGet and dbSet functions are assumed to rely on asynchronous\nI/O and both take a callback that is called upon completion.\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, function() {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, function() {\n\t\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, function() {\n\t\t\t\t\tokWeAreDone();\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\t});\n\nNotice how every single step requires another nested function definition. A\nfour-step process like the one shown here is fairly awkward. Imagine how painful a\n10-step process would be!\n\nOne might point out that there is no reason to wait for one dbSet to complete before\ncalling the next, but, assuming we don&#x27;t want okWeAreDone to be called until all\nthree calls to dbSet are finished, we&#x27;d need some logic to manage that:\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tvar completeCount = 0;\n\t\tvar complete = function() {\n\t\t\tcompleteCount += 1;\n\t\t\tif (completeCount == 3) {\n\t\t\t\tokWeAreDone();\n\t\t\t}\n\t\t}\n\t\t\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);\n\t});\n\nNow look at the same example using Flow-JS:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\nA flow consists of a series of functions, each of which is applied with a special\n`this` object which serves as a callback to the next function in the series. In\ncases like our second step, `this.MULTI()` can be used to generate a callback that\nwon&#x27;t call the next function until all such callbacks have been called.\n\n\nInstalling\n---------------\n\nFlow-JS is a CommonJS compatible module. Place the \&#x22;flow.js\&#x22; file in any directory\nlisted in your `require.paths` array and require it like this:\n\n\tvar flow = require(&#x27;flow&#x27;)\n\nOr you can just put \&#x22;flow.js\&#x22; next to your script and do this:\n\n\tvar flow = require(&#x27;./flow&#x27;)\n\n\nDefining a Flow\n---------------\n\n`flow.define` defines a flow given any number of functions as parameters. It returns\na function that can be used to execute that flow more than once. Whatever parameters\nare passed each time that flow is called are passed as the parameters to the first\nfunction in the flow.\n\nEach function in the flow is called with a special `this` object which maintains the\nstate of the flow&#x27;s execution, acts as a container for saving values for use between\nfunctions in the flow, and acts as a callback to the next function in the flow.\n\nHere is an example to make this clear:\n\n\t// define a flow for renaming a file and then printing its stats\n\tvar renameAndStat = flow.define(\n\t\n\t\tfunction(fromName, toName) {\n\t\t\t// arguments passed to renameAndStat() will pass through to this first function\n\t\t\t\n\t\t\tthis.toName = toName; // save to be used in the next function\n\t\t\tfs.rename(fromName, toName, this);\n\t\t\n\t\t},function(err) {\n\t\t\t// when fs.rename calls the special \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.rename chooses to pass to the callback will pass through to this function\n\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\t// the \&#x22;this\&#x22; here is the same as in the function above, so this.toName is available\n\t\t\tfs.stat(this.toName, this);\n\t\t\n\t\t},function(err, stats) {\n\t\t\t// when fs.stat calls the \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.stat chooses to pass to the callback will pass through to this function\n\t\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\t\n\t// now renameAndStat can be used more than once\n\trenameAndStat(\&#x22;/tmp/hello1\&#x22;, \&#x22;/tmp/world1\&#x22;);\n\trenameAndStat(\&#x22;/tmp/hello2\&#x22;, \&#x22;/tmp/world2\&#x22;);\n\n\nExecuting a Flow Just Once\n---------------\n\n`flow.exec` is a convenience function that defines a flow and executes it immediately,\npassing no arguments to the first function.\n\nHere&#x27;s a simple example very similar to the one above:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/hello\&#x22;, \&#x22;/tmp/world\&#x22;, this);\n\t\t},function(err) {\n\t\t\tif (err) throw err;\n\t\t\tfs.stat(\&#x22;/tmp/world\&#x22;, this)\n\t\t},function(err, stats) {\n\t\t\tif (err) throw err;\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\n\nMultiplexing\n---------------\n\nSometimes, it makes sense for a step in a flow to initiate several asynchronous tasks and\nthen wait for all of those tasks to finish before continuing to the next step in the flow.\nThis can be accomplished by passing `this.MULTI()` as the callback rather than just `this`.\n\nHere is an example of `this.MULTI()` in action (repeated from the overview):\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\n  You can identify the results of a function by passing a result identifier to MULTI. The results of a function can retrieved using this key in the final step. The result will be a single value if callback receives 0 or 1 argument, otherwise it will be an array of arguments passed to the callback.\n\n  Example:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this.MULTI(&#x27;bob&#x27;));\n\t\t\tdbGet(&#x27;userIdOf:joohndoe&#x27;, this.MULTI(&#x27;john&#x27;));\n\t\t},function(results) {\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;bob&#x27;] + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;);\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;john&#x27;] + &#x27;:email&#x27;, &#x27;joohndoe@potato.egg&#x27;);\n\t\t  okWeAreDone();\n\t\t}\n\t);\n\nIn many cases, you may simply discard the arguments passed to each of the callbacks generated\nby `this.MULTI()`, but if you need them, they are accessible as an array of `arguments`\nobjects passed as the first argument of the next function. Each `arguments` object will be\nappended to the array as it is received, so the order will be unpredictable for most\nasynchronous APIs.\n\nHere&#x27;s a quick example that checks for errors:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/a\&#x22;, \&#x22;/tmp/1\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/b\&#x22;, \&#x22;/tmp/2\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/c\&#x22;, \&#x22;/tmp/3\&#x22;, this.MULTI());\n\t\t\n\t\t},function(argsArray) {\n\t\t\targsArray.forEach(function(args){\n\t\t\t\tif (args[0]) then throw args[0];\n\t\t\t});\n\t\t}\n\t);\n\n\nserialForEach\n---------------\n\nFlow-JS comes with a convience function called `flow.serialForEach` which can be used to\napply an asynchronous function to each element in an array of values serially:\n\n\tflow.<span class="apidocCodeKeywordSpan">serialForEach</span>([1, 2, 3, 4], function(val) {\n\t\tkeystore.increment(\&#x22;counter\&#x22;, val, this);\n\t},function(error, newVal) {\n\t\tif (error) throw error;\n\t\tsys.puts(&#x27;newVal: &#x27; + newVal);\n\t},function() {\n\t\tsys.puts(&#x27;This is the end!&#x27;);\n\t});\n\n`flow.serialForEach` takes an array-like object, a function to be called for each item\nin the array, a function that receives the callback values after each iteration, and a\nfunction that is called after the entire process is finished. Both of the second two\nfunctions are optional.\n\n`flow.serialForEach` is actually implemented with `flow.define`.\n\nThanks to John Wright for suggesting the idea! (http://github.com/mrjjwright)\n&#x22;,
+  &#x22;readmeFilename&#x22;: &#x22;README.md&#x22;,
+  &#x22;url&#x22;: &#x22;http://github.com/willconant/flow-js&#x22;,
+  &#x22;version&#x22;: &#x22;0.2.3&#x22;
+}
 ...</pre></li>
     </ul>
 
@@ -819,21 +481,19 @@ apply an asynchronous function to each element in an array of values serially:
 			applyArgs(flowState, this, arguments);
 		}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);
-	});
-
-Now look at the same example using Flow-JS:
-
-	flow.<span class="apidocCodeKeywordSpan">exec</span>(
-		function() {
-			dbGet(&#x27;userIdOf:bobvance&#x27;, this);
-			
-		},function(userId) {
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());
+    {
+      &#x22;name&#x22;: &#x22;willconant&#x22;,
+      &#x22;email&#x22;: &#x22;will.conant@gmail.com&#x22;
+    }
+  ],
+  &#x22;name&#x22;: &#x22;flow&#x22;,
+  &#x22;optionalDependencies&#x22;: {},
+  &#x22;readme&#x22;: &#x22;Flow-JS\n===============\n\nOverview\n---------------\n\nFlow-JS provides a continuation-esque construct
+ that makes it much easier to express\nmulti-step asynchronous logic in non-blocking callback-heavy environments like\nNode.js or javascript in the web browser.\n\nThe concept is best explained with an example. The following code uses a simple\nasynchronous key-store to look-up a user&#x27;s ID from his username and then sets his\nemail address, first name, and last name.\n\nIn this example, the dbGet and dbSet functions are assumed to rely on asynchronous\nI/O and both take a callback that is called upon completion.\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, function() {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, function() {\n\t\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, function() {\n\t\t\t\t\tokWeAreDone();\n\t\t\t\t});\n\t\t\t});\n\t\t});\n\t});\n\nNotice how every single step requires another nested function definition. A\nfour-step process like the one shown here is fairly awkward. Imagine how painful a\n10-step process would be!\n\nOne might point out that there is no reason to wait for one dbSet to complete before\ncalling the next, but, assuming we don&#x27;t want okWeAreDone to be called until all\nthree calls to dbSet are finished, we&#x27;d need some logic to manage that:\n\n\tdbGet(&#x27;userIdOf:bobvance&#x27;, function(userId) {\n\t\tvar completeCount = 0;\n\t\tvar complete = function() {\n\t\t\tcompleteCount += 1;\n\t\t\tif (completeCount == 3) {\n\t\t\t\tokWeAreDone();\n\t\t\t}\n\t\t}\n\t\t\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);\n\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);\n\t});\n\nNow look at the same example using Flow-JS:\n\n\tflow.<span class="apidocCodeKeywordSpan">exec</span>(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\nA flow consists of a series of functions, each of which is applied with a special\n`this` object which serves as a callback to the next function in the series. In\ncases like our second step, `this.MULTI()` can be used to generate a callback that\nwon&#x27;t call the next function until all such callbacks have been called.\n\n\nInstalling\n---------------\n\nFlow-JS is a CommonJS compatible module. Place the \&#x22;flow.js\&#x22; file in any directory\nlisted in your `require.paths` array and require it like this:\n\n\tvar flow = require(&#x27;flow&#x27;)\n\nOr you can just put \&#x22;flow.js\&#x22; next to your script and do this:\n\n\tvar flow = require(&#x27;./flow&#x27;)\n\n\nDefining a Flow\n---------------\n\n`flow.define` defines a flow given any number of functions as parameters. It returns\na function that can be used to execute that flow more than once. Whatever parameters\nare passed each time that flow is called are passed as the parameters to the first\nfunction in the flow.\n\nEach function in the flow is called with a special `this` object which maintains the\nstate of the flow&#x27;s execution, acts as a container for saving values for use between\nfunctions in the flow, and acts as a callback to the next function in the flow.\n\nHere is an example to make this clear:\n\n\t// define a flow for renaming a file and then printing its stats\n\tvar renameAndStat = flow.define(\n\t\n\t\tfunction(fromName, toName) {\n\t\t\t// arguments passed to renameAndStat() will pass through to this first function\n\t\t\t\n\t\t\tthis.toName = toName; // save to be used in the next function\n\t\t\tfs.rename(fromName, toName, this);\n\t\t\n\t\t},function(err) {\n\t\t\t// when fs.rename calls the special \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.rename chooses to pass to the callback will pass through to this function\n\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\t// the \&#x22;this\&#x22; here is the same as in the function above, so this.toName is available\n\t\t\tfs.stat(this.toName, this);\n\t\t\n\t\t},function(err, stats) {\n\t\t\t// when fs.stat calls the \&#x22;this\&#x22; callback above, this function will be called\n\t\t\t// whatever arguments fs.stat chooses to pass to the callback will pass through to this function\n\t\t\t\n\t\t\tif (err) throw err;\n\t\t\t\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\t\n\t// now renameAndStat can be used more than once\n\trenameAndStat(\&#x22;/tmp/hello1\&#x22;, \&#x22;/tmp/world1\&#x22;);\n\trenameAndStat(\&#x22;/tmp/hello2\&#x22;, \&#x22;/tmp/world2\&#x22;);\n\n\nExecuting a Flow Just Once\n---------------\n\n`flow.exec` is a convenience function that defines a flow and executes it immediately,\npassing no arguments to the first function.\n\nHere&#x27;s a simple example very similar to the one above:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/hello\&#x22;, \&#x22;/tmp/world\&#x22;, this);\n\t\t},function(err) {\n\t\t\tif (err) throw err;\n\t\t\tfs.stat(\&#x22;/tmp/world\&#x22;, this)\n\t\t},function(err, stats) {\n\t\t\tif (err) throw err;\n\t\t\tsys.puts(\&#x22;stats: \&#x22; + JSON.stringify(stats));\n\t\t}\n\t);\n\n\nMultiplexing\n---------------\n\nSometimes, it makes sense for a step in a flow to initiate several asynchronous tasks and\nthen wait for all of those tasks to finish before continuing to the next step in the flow.\nThis can be accomplished by passing `this.MULTI()` as the callback rather than just `this`.\n\nHere is an example of `this.MULTI()` in action (repeated from the overview):\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this);\n\t\t\t\n\t\t},function(userId) {\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());\n\t\t\tdbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());\n\t\t\n\t\t},function() {\n\t\t\tokWeAreDone()\n\t\t}\n\t);\n\n  You can identify the results of a function by passing a result identifier to MULTI. The results of a function can retrieved using this key in the final step. The result will be a single value if callback receives 0 or 1 argument, otherwise it will be an array of arguments passed to the callback.\n\n  Example:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tdbGet(&#x27;userIdOf:bobvance&#x27;, this.MULTI(&#x27;bob&#x27;));\n\t\t\tdbGet(&#x27;userIdOf:joohndoe&#x27;, this.MULTI(&#x27;john&#x27;));\n\t\t},function(results) {\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;bob&#x27;] + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;);\n\t\t  dbSet(&#x27;user:&#x27; + results[&#x27;john&#x27;] + &#x27;:email&#x27;, &#x27;joohndoe@potato.egg&#x27;);\n\t\t  okWeAreDone();\n\t\t}\n\t);\n\nIn many cases, you may simply discard the arguments passed to each of the callbacks generated\nby `this.MULTI()`, but if you need them, they are accessible as an array of `arguments`\nobjects passed as the first argument of the next function. Each `arguments` object will be\nappended to the array as it is received, so the order will be unpredictable for most\nasynchronous APIs.\n\nHere&#x27;s a quick example that checks for errors:\n\n\tflow.exec(\n\t\tfunction() {\n\t\t\tfs.rename(\&#x22;/tmp/a\&#x22;, \&#x22;/tmp/1\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/b\&#x22;, \&#x22;/tmp/2\&#x22;, this.MULTI());\n\t\t\tfs.rename(\&#x22;/tmp/c\&#x22;, \&#x22;/tmp/3\&#x22;, this.MULTI());\n\t\t\n\t\t},function(argsArray) {\n\t\t\targsArray.forEach(function(args){\n\t\t\t\tif (args[0]) then throw args[0];\n\t\t\t});\n\t\t}\n\t);\n\n\nserialForEach\n---------------\n\nFlow-JS comes with a convience function called `flow.serialForEach` which can be used to\napply an asynchronous function to each element in an array of values serially:\n\n\tflow.serialForEach([1, 2, 3, 4], function(val) {\n\t\tkeystore.increment(\&#x22;counter\&#x22;, val, this);\n\t},function(error, newVal) {\n\t\tif (error) throw error;\n\t\tsys.puts(&#x27;newVal: &#x27; + newVal);\n\t},function() {\n\t\tsys.puts(&#x27;This is the end!&#x27;);\n\t});\n\n`flow.serialForEach` takes an array-like object, a function to be called for each item\nin the array, a function that receives the callback values after each iteration, and a\nfunction that is called after the entire process is finished. Both of the second two\nfunctions are optional.\n\n`flow.serialForEach` is actually implemented with `flow.define`.\n\nThanks to John Wright for suggesting the idea! (http://github.com/mrjjwright)\n&#x22;,
+  &#x22;readmeFilename&#x22;: &#x22;README.md&#x22;,
+  &#x22;url&#x22;: &#x22;http://github.com/willconant/flow-js&#x22;,
+  &#x22;version&#x22;: &#x22;0.2.3&#x22;
+}
 ...</pre></li>
     </ul>
 
@@ -905,115 +565,6 @@ Now look at the same example using Flow-JS:
 			if (this.finish) this.finish();
 		}</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.flow.serialForEach.exec" id="apidoc.module.flow.serialForEach.exec">module flow.serialForEach.exec</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.flow.serialForEach.exec.exec" id="apidoc.element.flow.serialForEach.exec.exec">
-        function <span class="apidocSignatureSpan">flow.serialForEach.</span>exec
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">exec = function () {
-			// The flowState is the actual object each step in the flow is applied to. It acts as a
-			// callback to the next function. It also maintains the internal state of each execution
-			// and acts as a place for users to save values between steps of the flow.
-			var flowState = function() {
-				if (flowState.__frozen) return;
-				
-				if (flowState.__timeoutId) {
-					clearTimeout(flowState.__timeoutId);
-					delete flowState.__timeoutId;
-				}
-				
-				var blockIdx = flowState.__nextBlockIdx ++;
-				var block = thisFlow.blocks[blockIdx];
-				
-				if (block === undefined) {
-					return;
-				}
-				else {
-					applyArgs(block, flowState, arguments);
-				}
-			}
-			
-			// __nextBlockIdx specifies which function is the next step in the flow.
-			flowState.__nextBlockIdx = 0;
-			
-			// __multiCount is incremented every time MULTI is used to createa a multiplexed callback
-			flowState.__multiCount = 0;
-			
-			// __multiOutputs accumulates the arguments of each call to callbacks generated by MULTI
-			flowState.__multiOutputs = [];
-			
-			// REWIND signals that the next call to thisFlow should repeat this step. It allows you
-			// to create serial loops.
-			flowState.REWIND = function() {
-				flowState.__nextBlockIdx -= 1;
-			}
-			
-			// MULTI can be used to generate callbacks that must ALL be called before the next step
-			// in the flow is executed. Arguments to those callbacks are accumulated, and an array of
-			// of those arguments objects is sent as the one argument to the next step in the flow.
-			// @param {String} resultId An identifier to get the result of a multi call.
-			flowState.MULTI = function(resultId) {
-				flowState.__multiCount += 1;
-				return function() {
-					flowState.__multiCount -= 1;
-					flowState.__multiOutputs.push(arguments);
-
-          if (resultId) {
-            var result = arguments.length &#x3c;= 1 ? arguments[0] : arguments
-            flowState.__multiOutputs[resultId] = result;
-          }
-					
-					if (flowState.__multiCount === 0) {
-						var multiOutputs = flowState.__multiOutputs;
-						flowState.__multiOutputs = [];
-						flowState(multiOutputs);
-					}
-				}
-			}
-						
-			// TIMEOUT sets a timeout that freezes a flow and calls the provided callback. This
-			// timeout is cleared if the next flow step happens first.
-			flowState.TIMEOUT = function(milliseconds, timeoutCallback) {
-				if (flowState.__timeoutId !== undefined) {
-					throw new Error(&#x22;timeout already set for this flow step&#x22;);
-				}
-				
-				flowState.__timeoutId = setTimeout(function() {
-					flowState.__frozen = true;
-					timeoutCallback();
-				}, milliseconds);
-			}
-			
-			applyArgs(flowState, this, arguments);
-		}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, complete);
-		dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, complete);
-	});
-
-Now look at the same example using Flow-JS:
-
-	flow.<span class="apidocCodeKeywordSpan">exec</span>(
-		function() {
-			dbGet(&#x27;userIdOf:bobvance&#x27;, this);
-			
-		},function(userId) {
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:email&#x27;, &#x27;bobvance@potato.egg&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:firstName&#x27;, &#x27;Bob&#x27;, this.MULTI());
-			dbSet(&#x27;user:&#x27; + userId + &#x27;:lastName&#x27;, &#x27;Vance&#x27;, this.MULTI());
-...</pre></li>
     </ul>
 
 
